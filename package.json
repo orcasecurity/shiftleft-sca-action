@@ -1,0 +1,33 @@
+{
+  "name": "shiftleft-sca-action",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build src/main.js",
+    "lint": "npx prettier --check . && npx eslint .",
+    "lint:fix": "npx prettier --list-different --write . && npx eslint . --fix",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orcasecurity/shiftleft-sca-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/orcasecurity/shiftleft-sca-action/issues"
+  },
+  "homepage": "https://github.com/orcasecurity/shiftleft-sca-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/jest": "^29.5.0",
+    "@vercel/ncc": "^0.38.3",
+    "eslint": "^9.15.0",
+    "jest": "^29.7.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.3.3"
+  }
+}
