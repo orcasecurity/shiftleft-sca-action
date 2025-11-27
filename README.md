@@ -81,7 +81,7 @@ jobs:
 
 After scanning, the action will add the results as annotations in a pull request:
 
-TBA
+![](/assets/license_annotation_preview.png)
 
 > **NOTE:** Annotations can be disabled by setting the "show_annotation" input to "false"
 
@@ -127,9 +127,3 @@ jobs:
         with:
           sarif_file: results/sca.sarif
 ```
-
-The results list can be found on the security tab of your GitHub project and should look like the following image
-TBA
-
-An entry should describe the error and in which line it occurred
-TBA
