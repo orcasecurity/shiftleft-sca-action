@@ -118,6 +118,12 @@ function set_sca_scan_flags() {
   if [ "${INPUT_TIMEOUT}" ]; then
     SCAN_FLAGS+=(--timeout "${INPUT_TIMEOUT}")
   fi
+  if [ "${INPUT_FILE_PATTERNS}" ]; then
+    IFS=',' read -ra FILE_PATTERNS <<< "${INPUT_FILE_PATTERNS}"
+    for pattern in "${FILE_PATTERNS[@]}"; do
+      SCAN_FLAGS+=(--file-patterns "${pattern}")
+    done
+  fi
 }
 
 function set_env_vars() {

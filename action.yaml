@@ -99,6 +99,9 @@ inputs:
   log_path:
     description: "The directory path to specify where the logs should be written to on debug mode. Default to the current working directory"
     required: false
+  file_patterns:
+    description: "Use this flag when you have dependency files with non-standard names that the scanner wouldn't recognize by default. Indicate which analyzer (e.g., Python, Docker, npm) to use for a specific file pattern. Format: <analyzer>:<path> . Example: pip:requirements-.*\\.txt"
+    required: false
 
 outputs:
   exit_code:

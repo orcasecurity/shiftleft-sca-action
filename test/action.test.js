@@ -121,6 +121,9 @@ describe("GitHub Action Tests", () => {
         log_path: { value: "/logs" },
         non_strict_package_detection: { value: "true" },
         skip_remote_lookup: { value: "true" },
+        file_patterns: {
+          value: "pip:requirements-.*\\.txt,npm:package\\.json",
+        },
       };
       const results = executeEntrypoint(testInputs);
       const orcaCliArgs = extractOrcaCliArgs(results);
@@ -129,6 +132,13 @@ describe("GitHub Action Tests", () => {
         ([inputKey, { value: inputValue, delimiter = " " }]) => {
           if (inputKey === "api_token" || inputKey === "show_annotations") {
             // api_token is set as an environment variable and show_annotations is not a cli flag
+            return;
+          }
+          if (inputKey === "file_patterns") {
+            // file_patterns is split and repeated as multiple flags
+            inputValue.split(",").forEach((pattern) => {
+              expect(orcaCliArgs).toContain(`--file-patterns ${pattern}`);
+            });
             return;
           }
           if (inputKey === "path") {
