@@ -77,6 +77,43 @@ function extractVulnerability(results, annotations) {
   }
 }
 
+function getMaliciousDetails(issue) {
+  let details = [];
+  details.push(`Package: ${issue["package_name"]}`);
+  if (issue["version"]) {
+    details.push(`Installed Version: ${issue["version"]}`);
+  }
+  if (issue["fixed_version"]) {
+    details.push(`Fixed Version: ${issue["fixed_version"]}`);
+  }
+  if (issue["target_type"]) {
+    details.push(`Type: ${issue["target_type"]}`);
+  }
+  if (issue["osv_id"]) {
+    details.push(`OSV ID: ${issue["osv_id"]}`);
+  }
+  if (issue["affected_ranges"] && issue["affected_ranges"].length > 0) {
+    details.push(`Affected Ranges: ${issue["affected_ranges"].join(", ")}`);
+  }
+  return details.join("\n");
+}
+
+function extractMaliciousPackages(results, annotations) {
+  const issues = results.results?.malicious_packages?.issues || [];
+  for (const issue of issues) {
+    const location = issue.location || {};
+    annotations.push({
+      file: issue["target"],
+      startLine: location["start_line"] || 1,
+      endLine: location["end_line"] || 1,
+      priority: issue["priority"] || "HIGH",
+      status: issue["status"] || "FAILED",
+      title: `Malicious package: ${issue["package_name"]}`,
+      details: getMaliciousDetails(issue),
+    });
+  }
+}
+
 function extractLicense(results, annotations) {
   const licenses = results.results?.licenses?.issues || [];
   for (const license of licenses) {
@@ -96,6 +133,7 @@ function extractLicense(results, annotations) {
 function extractAnnotations(results) {
   let annotations = [];
   extractVulnerability(results, annotations);
+  extractMaliciousPackages(results, annotations);
   extractLicense(results, annotations);
   return annotations;
 }

@@ -35,9 +35,9 @@ inputs:
     description: "Path or directory to scan"
     required: true
   security_checks:
-    description: "List of security issues to detect (comma-separated: vulns, license)"
+    description: "List of security issues to detect (comma-separated: vulns, license, malicious)"
     required: false
-    default: "vulns,license"
+    default: "vulns,license,malicious"
   exceptions_filepath:
     description: "Path to exceptions YAML file"
     required: false
