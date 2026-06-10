@@ -77,25 +77,22 @@ function extractVulnerability(results, annotations) {
   }
 }
 
+const MALICIOUS_DETAIL_FIELDS = [
+  { key: "package_name", label: "Package" },
+  { key: "version", label: "Installed Version" },
+  { key: "fixed_version", label: "Fixed Version" },
+  { key: "target_type", label: "Type" },
+  { key: "osv_id", label: "OSV ID" },
+];
+
 function getMaliciousDetails(issue) {
-  let details = [];
-  details.push(`Package: ${issue["package_name"]}`);
-  if (issue["version"]) {
-    details.push(`Installed Version: ${issue["version"]}`);
+  const lines = MALICIOUS_DETAIL_FIELDS.filter(({ key }) => issue[key]).map(
+    ({ key, label }) => `${label}: ${issue[key]}`,
+  );
+  if (issue.affected_ranges?.length) {
+    lines.push(`Affected Ranges: ${issue.affected_ranges.join(", ")}`);
   }
-  if (issue["fixed_version"]) {
-    details.push(`Fixed Version: ${issue["fixed_version"]}`);
-  }
-  if (issue["target_type"]) {
-    details.push(`Type: ${issue["target_type"]}`);
-  }
-  if (issue["osv_id"]) {
-    details.push(`OSV ID: ${issue["osv_id"]}`);
-  }
-  if (issue["affected_ranges"] && issue["affected_ranges"].length > 0) {
-    details.push(`Affected Ranges: ${issue["affected_ranges"].join(", ")}`);
-  }
-  return details.join("\n");
+  return lines.join("\n");
 }
 
 function extractMaliciousPackages(results, annotations) {
