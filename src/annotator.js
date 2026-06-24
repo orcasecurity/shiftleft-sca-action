@@ -77,6 +77,40 @@ function extractVulnerability(results, annotations) {
   }
 }
 
+const MALICIOUS_DETAIL_FIELDS = [
+  { key: "package_name", label: "Package" },
+  { key: "version", label: "Installed Version" },
+  { key: "fixed_version", label: "Fixed Version" },
+  { key: "target_type", label: "Type" },
+  { key: "osv_id", label: "OSV ID" },
+];
+
+function getMaliciousDetails(issue) {
+  const lines = MALICIOUS_DETAIL_FIELDS.filter(({ key }) => issue[key]).map(
+    ({ key, label }) => `${label}: ${issue[key]}`,
+  );
+  if (issue.affected_ranges?.length) {
+    lines.push(`Affected Ranges: ${issue.affected_ranges.join(", ")}`);
+  }
+  return lines.join("\n");
+}
+
+function extractMaliciousPackages(results, annotations) {
+  const issues = results.results?.malicious_packages?.issues || [];
+  for (const issue of issues) {
+    const location = issue.location || {};
+    annotations.push({
+      file: issue["target"],
+      startLine: location["start_line"] || 1,
+      endLine: location["end_line"] || 1,
+      priority: issue["priority"] || "HIGH",
+      status: issue["status"] || "FAILED",
+      title: `Malicious package: ${issue["package_name"]}`,
+      details: getMaliciousDetails(issue),
+    });
+  }
+}
+
 function extractLicense(results, annotations) {
   const licenses = results.results?.licenses?.issues || [];
   for (const license of licenses) {
@@ -96,6 +130,7 @@ function extractLicense(results, annotations) {
 function extractAnnotations(results) {
   let annotations = [];
   extractVulnerability(results, annotations);
+  extractMaliciousPackages(results, annotations);
   extractLicense(results, annotations);
   return annotations;
 }
